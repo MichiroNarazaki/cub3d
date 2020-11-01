@@ -45,6 +45,14 @@ typedef struct s_game
 	t_img img;
 } t_game;
 
+typedef struct s_line
+{
+	int x_start;
+	int y_start;
+	int x_end;
+	int y_end;
+} t_line;
+
 //赤いユーザの四角を描画している関数(多分)
 void my_rec_put(t_game *game, int x, int y, int color)
 {
@@ -63,22 +71,34 @@ void my_rec_put(t_game *game, int x, int y, int color)
 	}
 }
 
-void my_line(t_game *game, int x, int y,int color)
+void my_make_line(t_game *game, t_line *line, int color)
 {
-	int x_end = x + 30;
-	int y_end = y + 15;
 	int a; //傾き
 	int b; //切片
 	int i;
 
-	a = ((y_end - y) / (x_end - x));
-	b = y - (a * x);
+	a = ((line->y_end - line->y_start) / (line->x_end - line->x_start));
+	b = line->y_start - (a * line->x_start);
 	i = 0;
-	while (x + i <= x_end)
+	while (line->x_start + i <= line->x_end)
 	{
-		mlx_pixel_put(game->mlx, game->win, x + i, a * (x + i) + b, color);
+		mlx_pixel_put(game->mlx, game->win, line->x_start + i, a * (line->x_start + i) + b, color);
 		i++;
 	}
+}
+
+void my_vision(t_game *game, int x, int y, int color)
+{
+	t_line line;
+
+	line.x_start = x;
+	line.x_end = x + 30;
+	line.y_start = y;
+	line.y_end = y + 30;
+
+	my_make_line(game,&line,color);
+	line.y_end = y - 30;
+	my_make_line(game,&line,color);
 }
 
 int deal_key(int key_code, t_game *game)
@@ -121,7 +141,7 @@ int main_loop(t_game *game)
 		//	描画する
 		mlx_put_image_to_window(game->mlx, game->win, game->img.img, 0, 0);
 		my_rec_put(game, g_player_x, g_player_y, 0x00FF0000);
-		my_line(game, g_player_x, g_player_y, 0x00FFFFFF);
+		my_vision(game, g_player_x, g_player_y, 0x00FFFFFF);
 	}
 	g_key_flag = 0;
 	return (0);
