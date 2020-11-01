@@ -1,60 +1,13 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <string.h>
-
 //各自で適宜ヘッダーファイルの設定をしてください。
-#include "mms/mlx.h"
-
-#define X_EVENT_KEY_PRESS 2
-#define X_EVENT_KEY_EXIT 17 //Exit program key code
-
-//キーコードはwsl ubuntu仕様です。
-//minilibx-linuxディレクトリ内の/test/mlx-testでそれぞれの環境のキーコードを確認してください。
-
-#define KEY_ESC 65307
-#define KEY_W 126 //上
-#define KEY_A 123 //左
-#define KEY_S 125 //下
-#define KEY_D 124 //右
-
-#define TILE_SIZE 32
-#define ROWS 11
-#define COLS 15
-#define WIDTH COLS *TILE_SIZE
-#define HEIGHT ROWS *TILE_SIZE
+#include "../mms/mlx.h"
+#include "../includes/main.h"
 
 int g_player_x = 150; //初期位置
 int g_player_y = 150; //初期位置
 int g_key_flag = 1;
 
-typedef struct s_img
-{
-	void *img;
-	int *data; //imgの本体
 
-	int size_l;
-	int bpp;
-	int endian;
-} t_img;
 
-typedef struct s_game
-{
-	void *mlx;
-	void *win;
-	t_img img;
-} t_game;
-
-typedef struct s_line
-{
-	double x_start;
-	double y_start;
-	double x_end;
-	double y_end;
-} t_line;
-
-#define SIDE 20
-//赤いユーザの四角を描画している関数(多分)
 //原点O(x,y)
 void my_rec_put(t_game *game, int x, int y, int color)
 {
@@ -76,36 +29,6 @@ void my_rec_put(t_game *game, int x, int y, int color)
 	}
 }
 
-void my_make_line(t_game *game, t_line *line, int color)
-{
-	double a; //傾き
-	double b; //切片
-	int i;
-
-	a = ((line->y_end - line->y_start) / (line->x_end - line->x_start));
-	b = line->y_start - (a * line->x_start);
-	i = 0;
-	while (line->x_start + i <= line->x_end)
-	{
-		mlx_pixel_put(game->mlx, game->win, (int)(line->x_start + i), (int)(a * (line->x_start + i) + b), color);
-		i++;
-	}
-}
-
-void my_vision(t_game *game, int x, int y, int color)
-{
-	t_line line;
-	double dy = 50.0;
-	double dx = 100.0;
-
-	line.x_start = x;
-	line.x_end = x + dx;
-	line.y_start = y;
-	line.y_end = y + dy;
-	my_make_line(game, &line, color);
-	line.y_end = y - dy;
-	my_make_line(game, &line, color);
-}
 
 int deal_key(int key_code, t_game *game)
 {
@@ -148,6 +71,7 @@ int main_loop(t_game *game)
 		mlx_put_image_to_window(game->mlx, game->win, game->img.img, 0, 0);
 		my_rec_put(game, g_player_x, g_player_y, 0x00FF0000);
 		my_vision(game, g_player_x, g_player_y, 0x00FFFFFF);
+		my_walls(game,0x00F0F080);
 	}
 	g_key_flag = 0;
 	return (0);
