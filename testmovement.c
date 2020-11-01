@@ -24,8 +24,8 @@
 #define WIDTH COLS *TILE_SIZE
 #define HEIGHT ROWS *TILE_SIZE
 
-int g_player_x = 50; //初期位置
-int g_player_y = 50; //初期位置
+int g_player_x = 150; //初期位置
+int g_player_y = 150; //初期位置
 int g_key_flag = 1;
 
 typedef struct s_img
@@ -47,34 +47,39 @@ typedef struct s_game
 
 typedef struct s_line
 {
-	int x_start;
-	int y_start;
-	int x_end;
-	int y_end;
+	double x_start;
+	double y_start;
+	double x_end;
+	double y_end;
 } t_line;
 
+#define SIDE 20
 //赤いユーザの四角を描画している関数(多分)
+//原点O(x,y)
 void my_rec_put(t_game *game, int x, int y, int color)
 {
-	int x_end = x + 10; //10が四角の大きさを決定してる(辺の長さ)
-	int y_end = y + 10; //10が四角の大きさを決定してる(辺の長さ)
-	int y_tmp = y;
-	while (x <= x_end)
+	int x_start = x - (SIDE / 2);
+	int y_start = y - (SIDE / 2);
+	int x_end = x + (SIDE / 2); //10が四角の大きさを決定してる(辺の長さ)
+	int y_end = y + (SIDE / 2); //10が四角の大きさを決定してる(辺の長さ)
+	int y_tmp = y_start;
+
+	while (x_start <= x_end)
 	{
-		y = y_tmp;
-		while (y <= y_end)
+		y_start = y_tmp;
+		while (y_start <= y_end)
 		{
-			mlx_pixel_put(game->mlx, game->win, x, y, color);
-			y++;
+			mlx_pixel_put(game->mlx, game->win, x_start, y_start, color);
+			y_start++;
 		}
-		x++;
+		x_start++;
 	}
 }
 
 void my_make_line(t_game *game, t_line *line, int color)
 {
-	int a; //傾き
-	int b; //切片
+	double a; //傾き
+	double b; //切片
 	int i;
 
 	a = ((line->y_end - line->y_start) / (line->x_end - line->x_start));
@@ -82,7 +87,7 @@ void my_make_line(t_game *game, t_line *line, int color)
 	i = 0;
 	while (line->x_start + i <= line->x_end)
 	{
-		mlx_pixel_put(game->mlx, game->win, line->x_start + i, a * (line->x_start + i) + b, color);
+		mlx_pixel_put(game->mlx, game->win, (int)(line->x_start + i), (int)(a * (line->x_start + i) + b), color);
 		i++;
 	}
 }
@@ -90,15 +95,16 @@ void my_make_line(t_game *game, t_line *line, int color)
 void my_vision(t_game *game, int x, int y, int color)
 {
 	t_line line;
+	double dy = 50.0;
+	double dx = 100.0;
 
 	line.x_start = x;
-	line.x_end = x + 30;
+	line.x_end = x + dx;
 	line.y_start = y;
-	line.y_end = y + 30;
-
-	my_make_line(game,&line,color);
-	line.y_end = y - 30;
-	my_make_line(game,&line,color);
+	line.y_end = y + dy;
+	my_make_line(game, &line, color);
+	line.y_end = y - dy;
+	my_make_line(game, &line, color);
 }
 
 int deal_key(int key_code, t_game *game)
