@@ -1,7 +1,7 @@
 #include "../includes/main.h"
 #include "../mms/mlx.h"
 
-void my_make_line(t_game *game, t_line *line, int color)
+void my_make_line(t_img *img, t_line *line, int color)
 {
 	double a; //傾き
 	double b; //切片
@@ -15,7 +15,7 @@ void my_make_line(t_game *game, t_line *line, int color)
 		x = line->x_start;
 		while (y < line->y_end)
 		{
-			game->img.data[x + (y - 1) * WIDTH] = color;
+			img->data[x + (y - 1) * WIDTH] = color;
 			y++;
 		}
 	}
@@ -25,7 +25,7 @@ void my_make_line(t_game *game, t_line *line, int color)
 		y = line->y_start;
 		while (x < line->x_end)
 		{
-			game->img.data[x + (y - 1) * WIDTH] = color;
+			img->data[x + (y - 1) * WIDTH] = color;
 			x++;
 		}
 	}
@@ -43,7 +43,7 @@ void my_make_line(t_game *game, t_line *line, int color)
 				printf("Error : Array index is minus\n");
 				return;
 			}
-			game->img.data[x + (y - 1) * WIDTH] = color; //0 + (0 -1)*WIDTHにアクセスしているからだめ
+			img->data[x + (y - 1) * WIDTH] = color; //0 + (0 -1)*WIDTHにアクセスしているからだめ
 			i++;
 		}
 	}

@@ -4,7 +4,7 @@
 
 
 //start < endの大小関係としないと表示されない
-void my_walls(t_game *game, int color)
+void my_walls(t_img *img, int color)
 {
 	t_line line_1;
 	t_line line_2;
@@ -25,8 +25,7 @@ void my_walls(t_game *game, int color)
 	line_3.x_end = 600.0;
 	line_3.y_end = 400.0;
 
-	my_make_line(game, &line_1, color);
-	my_make_line(game, &line_2, color);
-	my_make_line(game, &line_3, color);
-
+	my_make_line(img, &line_1, color);
+	my_make_line(img, &line_2, color);
+	my_make_line(img, &line_3, color);
 }

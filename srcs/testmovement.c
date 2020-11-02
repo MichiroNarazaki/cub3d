@@ -7,24 +7,26 @@ int g_player_y = 150; //初期位置
 int g_key_flag = 1;
 
 //原点O(x,y)
-void my_rec_put(t_game *game, int x, int y, int color)
+void my_rec_put(t_img *img, int color)
 {
-	int x_start = x - (SIDE / 2);
-	int y_start = y - (SIDE / 2);
-	int x_end = x + (SIDE / 2); //10が四角の大きさを決定してる(辺の長さ)
-	int y_end = y + (SIDE / 2); //10が四角の大きさを決定してる(辺の長さ)
-	int y_tmp = y_start;
+	double x = ORIGIN_X;
+	double y = ORIGIN_Y;
+	double x_start = x - (SIDE / 2);
+	double y_start = y - (SIDE / 2);
+	double x_end = x + (SIDE / 2); //10が四角の大きさを決定してる(辺の長さ)
+	double y_end = y + (SIDE / 2); //10が四角の大きさを決定してる(辺の長さ)
+	int i;
+	t_line line;
 
-	while (x_start <= x_end)
+	line.y_end = y_end;
+	line.y_start = y_start;
+	i = 0;
+	while (x_start + (double)i <= x_end)
 	{
-		y_start = y_tmp;
-		while (y_start <= y_end)
-		{
-			game->img.data[x_start + (y_start - 1) * WIDTH]=color;
-			// mlx_pixel_put(game->mlx, game->win, x_start, y_start, color);
-			y_start++;
-		}
-		x_start++;
+		line.x_start = x_start + (double)i;
+		line.x_end = x_start + (double)i;
+		my_make_line(img, &line, color);
+		i++;
 	}
 }
 
@@ -54,37 +56,25 @@ void window_init(t_game *game)
 	game->win = mlx_new_window(game->mlx, WIDTH, HEIGHT, "mlx 42");
 }
 
-void img_init(t_game *game)
+void img_init(t_img *img, t_game *game)
 {
-	game->img.img = mlx_new_image(game->mlx, WIDTH, HEIGHT);
-	game->img.data = (int *)mlx_get_data_addr(game->img.img, &game->img.bpp, &game->img.size_l, &game->img.endian);
-}
-
-void my_rectangle(t_game *game)
-{
-	int i;
-
-	i = 0;
-	while (i < 2000)
-	{
-		game->img.data[i] = 0x00c9e8;
-		i++;
-	}
+	img->img = mlx_new_image(game->mlx, WIDTH, HEIGHT);
+	img->data = (int *)mlx_get_data_addr(img->img, &img->bpp, &img->size_l, &img->endian);
 }
 
 int main_loop(t_game *game)
 {
+	t_img wall;
+
+	img_init(&wall,game);
 	if (g_key_flag == 1) //g_key_flagって何?
 	{
 		//	描画する
-		// my_rectangle(game);
-		my_walls(game, 0x00F0F080);
-		my_rec_put(game, g_player_x, g_player_y, 0x00FF0000);
-		my_vision(game, g_player_x, g_player_y, 0x00FFFFFF);
-		mlx_put_image_to_window(game->mlx, game->win, game->img.img, 0, 0);
-		// my_rec_put(game, g_player_x, g_player_y, 0x00FF0000);
-		// my_vision(game, g_player_x, g_player_y, 0x00FFFFFF);
-		// my_walls(game, 0x00F0F080);
+		my_walls(&wall, 0x00F0F080);
+		my_rec_put(&(game->img), 0x00FF00F0);
+		my_vision(&(game->img), 0x00FFFFFF);
+		mlx_put_image_to_window(game->mlx, game->win, game->img.img, g_player_x, g_player_y);
+		mlx_put_image_to_window(game->mlx, game->win, wall.img, 300, 300);
 	}
 	g_key_flag = 0;
 	return (0);
@@ -95,7 +85,7 @@ int main(void)
 	t_game game;
 
 	window_init(&game);
-	img_init(&game);
+	img_init(&game.img, &game);
 	mlx_hook(game.win, X_EVENT_KEY_PRESS, 1, &deal_key, &game);
 	mlx_hook(game.win, X_EVENT_KEY_EXIT, 1, &close, &game);
 
