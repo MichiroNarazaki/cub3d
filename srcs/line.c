@@ -19,7 +19,7 @@ void my_make_line(t_game *game, t_line *line, int color)
 			y++;
 		}
 	}
-	else if (line->x_end == line->x_start) //x軸平衡
+	else if (line->y_end == line->y_start) //x軸平衡
 	{
 		x = line->x_start;
 		y = line->y_start;
@@ -34,11 +34,16 @@ void my_make_line(t_game *game, t_line *line, int color)
 		a = ((line->y_end - line->y_start) / (line->x_end - line->x_start));
 		b = line->y_start - (a * line->x_start);
 		i = 0;
-		while (line->x_start + i <= line->x_end)
+		while ((int)line->x_start + i <= (int)line->x_end)
 		{
-			x = (int)(line->x_start + i);
-			y = (int)(a * (line->x_start + i) + b);
-			game->img.data[x + (y - 1) * WIDTH] = color;
+			x = (int)(line->x_start + (double)i);
+			y = (int)(a * (line->x_start + (double)i) + b);
+			if ((x + (y - 1) * WIDTH) < 0)
+			{
+				printf("Error : Array index is minus\n");
+				return;
+			}
+			game->img.data[x + (y - 1) * WIDTH] = color; //0 + (0 -1)*WIDTHにアクセスしているからだめ
 			i++;
 		}
 	}
