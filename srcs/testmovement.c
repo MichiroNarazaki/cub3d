@@ -6,8 +6,6 @@ int g_player_x = 150; //初期位置
 int g_player_y = 150; //初期位置
 int g_key_flag = 1;
 
-
-
 //原点O(x,y)
 void my_rec_put(t_game *game, int x, int y, int color)
 {
@@ -22,13 +20,13 @@ void my_rec_put(t_game *game, int x, int y, int color)
 		y_start = y_tmp;
 		while (y_start <= y_end)
 		{
-			mlx_pixel_put(game->mlx, game->win, x_start, y_start, color);
+			game->img.data[x_start + (y_start - 1) * WIDTH]=color;
+			// mlx_pixel_put(game->mlx, game->win, x_start, y_start, color);
 			y_start++;
 		}
 		x_start++;
 	}
 }
-
 
 int deal_key(int key_code, t_game *game)
 {
@@ -50,7 +48,6 @@ int close(t_game *game)
 {
 	exit(0);
 }
-
 void window_init(t_game *game)
 {
 	game->mlx = mlx_init();
@@ -63,15 +60,31 @@ void img_init(t_game *game)
 	game->img.data = (int *)mlx_get_data_addr(game->img.img, &game->img.bpp, &game->img.size_l, &game->img.endian);
 }
 
+void my_rectangle(t_game *game)
+{
+	int i;
+
+	i = 0;
+	while (i < 2000)
+	{
+		game->img.data[i] = 0x00c9e8;
+		i++;
+	}
+}
+
 int main_loop(t_game *game)
 {
-	if (g_key_flag == 1)
+	if (g_key_flag == 1) //g_key_flagって何?
 	{
 		//	描画する
-		mlx_put_image_to_window(game->mlx, game->win, game->img.img, 0, 0);
+		// my_rectangle(game);
+		my_walls(game, 0x00F0F080);
 		my_rec_put(game, g_player_x, g_player_y, 0x00FF0000);
 		my_vision(game, g_player_x, g_player_y, 0x00FFFFFF);
-		my_walls(game,0x00F0F080);
+		mlx_put_image_to_window(game->mlx, game->win, game->img.img, 0, 0);
+		// my_rec_put(game, g_player_x, g_player_y, 0x00FF0000);
+		// my_vision(game, g_player_x, g_player_y, 0x00FFFFFF);
+		// my_walls(game, 0x00F0F080);
 	}
 	g_key_flag = 0;
 	return (0);
