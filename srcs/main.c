@@ -2,24 +2,22 @@
 #include "../mms/mlx.h"
 #include "../includes/main.h"
 
-
-int g_player_x = 3*TILE_SIZE; //初期位置
-int g_player_y = 3*TILE_SIZE; //初期位置
+int g_player_x = 2.5 * TILE_SIZE; //初期位置
+int g_player_y = 2.5 * TILE_SIZE; //初期位置
 int g_key_flag = 1;
-
 
 int deal_key(int key_code, t_game *game)
 {
 	if (key_code == KEY_ESC)
 		exit(0);
 	else if (key_code == KEY_W)
-		g_player_y -= 10;
+		g_player_y -= TILE_SIZE;
 	else if (key_code == KEY_S)
-		g_player_y += 10;
+		g_player_y += TILE_SIZE;
 	else if (key_code == KEY_A)
-		g_player_x -= 10;
+		g_player_x -= TILE_SIZE;
 	else if (key_code == KEY_D)
-		g_player_x += 10;
+		g_player_x += TILE_SIZE;
 	g_key_flag = 1;
 	return (0);
 }
@@ -42,18 +40,13 @@ void img_init(t_img *img, t_game *game)
 
 int main_loop(t_game *game)
 {
-	t_img ceiling;
-
-	img_init(&ceiling,game);
 	if (g_key_flag == 1) //g_key_flagって何?
 	{
 		//	描画する
-		my_ceiling(&ceiling);
-		// my_walls(&wall, 0x00F0F080);
-		// my_rec_put(&(game->img), 0x00FF00F0);
-		// my_vision(&(game->img), 0x00FFFFFF);
-		mlx_put_image_to_window(game->mlx, game->win, game->img.img, g_player_x, g_player_y);
-		mlx_put_image_to_window(game->mlx, game->win, ceiling.img, 0, 0);
+		my_walls(&game->img, 0x00F0F080);
+		mlx_put_image_to_window(game->mlx, game->win, game->img.img, 0, 0);
+		my_rec_put(game, g_player_x, g_player_y, 0x00FF00F0);
+		my_vision(game, g_player_x, g_player_y, 0x00FFFFFF);
 	}
 	g_key_flag = 0;
 	return (0);

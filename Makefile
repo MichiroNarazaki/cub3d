@@ -6,6 +6,7 @@ SOURCES =	srcs/line.c \
 			srcs/main.c \
 			srcs/vision.c \
 			srcs/walls.c \
+			srcs/make_pixel_line.c \
 			srcs/img_base.c \
 			srcs/rec.c
 
