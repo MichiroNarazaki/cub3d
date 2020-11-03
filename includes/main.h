@@ -18,8 +18,8 @@
 
 // #define TILE_SIZE 32
 #define TILE_SIZE 64
-#define ROWS 11
-#define COLS 15
+#define ROWS 5
+#define COLS 5
 #define WIDTH COLS *TILE_SIZE
 #define HEIGHT ROWS *TILE_SIZE
 
@@ -56,6 +56,7 @@ void my_vision(t_img *img, int color);
 void my_make_line(t_img *img, t_line *line, int color);
 void my_walls(t_img *img, int color);
 void my_rec_put(t_img *img, int color);
+void my_ceiling(t_img *img);
 
 
 

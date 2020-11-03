@@ -3,9 +3,11 @@ CFLAGS = -Wall -Wextra -Werror
 NAME = cub3d.a
 OPTIONS = -L./opengl -lmlx -framework OpenGL -framework AppKit
 SOURCES =	srcs/line.c \
-			srcs/testmovement.c \
+			srcs/main.c \
 			srcs/vision.c \
-			srcs/walls.c
+			srcs/walls.c \
+			srcs/img_base.c \
+			srcs/rec.c
 
 all: $(NAME)
 
