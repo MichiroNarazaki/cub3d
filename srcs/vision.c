@@ -2,44 +2,31 @@
 #include "../mms/mlx.h"
 #include "../includes/main.h"
 
-void my_vision(t_game *game, int x, int y, int color)
-{
-	t_line line;
-	double dy = 50.0;
-	double dx = 100.0;
+// double g_player_deg = 0; //初期角度n°
 
+// x,yはユーザの位置情報
+
+void my_vision(t_img *img, int x, int y, int color)
+{
+	// t_vector player;
+	t_vector camera;
+	t_line line;
+	double i;
+
+	// player.dir = g_player_deg * (M_PI / 180);
+	// camera.dir = player.dir + M_PI / 2;
+ 	camera.len = TILE_SIZE;//3dだと画面サイズ/2。だけど2dなので画面サイズ100としてcamera.lenは50と指定する
+	i = 0;
 	line.x_start = x;
-	line.x_end = x + dx;
 	line.y_start = y;
-	line.y_end = y + dy;
-	make_pixel_line(game, &line, color);
-	line.y_end = y - dy;
-	make_pixel_line(game, &line, color);
+	line.y_end = y + 2 * TILE_SIZE; //最初は定数
+	while (i < camera.len)
+	{
+		line.x_end = x + i;
+		my_make_line(img, &line, color);
+		line.x_end = x - i;
+		my_make_line(img, &line, color);
+		i += 1;
+	}
 }
 
-// void my_vision(t_img *img, int color)
-// {
-// 	double x;
-// 	double y;
-// 	t_line line;
-// 	double dy;
-// 	double dx;
-
-// 	y = ORIGIN_Y;
-// 	x = ORIGIN_X;
-// 	dy = 50.0;
-// 	dx = 100.0;
-
-// 	line.x_start = x;
-// 	line.x_end = x + dx;
-// 	line.y_start = y;
-// 	line.y_end = y + dy;
-// 	my_make_line(img, &line, color);
-// 	line.y_end = y - dy;
-// 	if(line.y_end < 0 )
-// 	{
-// 		printf("Error : line.y_end is minus");
-// 		return;
-// 	}
-// 	my_make_line(img, &line, color);
-// }
