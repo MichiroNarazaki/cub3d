@@ -43,10 +43,12 @@ int main_loop(t_game *game)
 	if (g_key_flag == 1) //g_key_flagって何?
 	{
 		//	描画する
-		my_walls(&game->img, 0x00F0F080);
+		my_walls(&(game->img), 0x00204030);
+		// my_ceiling_tiles(&game->img, 0x00F0F080);
+		my_rec_put(&(game->img), g_player_x, g_player_y, 0x00FF00F0);
+		my_vision(&(game->img), g_player_x, g_player_y, 0x00303030);
 		mlx_put_image_to_window(game->mlx, game->win, game->img.img, 0, 0);
-		my_rec_put(game, g_player_x, g_player_y, 0x00FF00F0);
-		my_vision(game, g_player_x, g_player_y, 0x00FFFFFF);
+		// my_vision(game, g_player_x, g_player_y, 0x00FFFFFF);
 	}
 	g_key_flag = 0;
 	return (0);
