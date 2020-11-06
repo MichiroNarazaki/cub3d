@@ -17,9 +17,9 @@
 #define KEY_D 124 //右
 
 // #define TILE_SIZE 32
-#define TILE_SIZE 128
-#define ROWS 5
-#define COLS 5
+#define TILE_SIZE 32
+#define ROWS 10
+#define COLS 10
 #define WIDTH COLS *TILE_SIZE
 #define HEIGHT ROWS *TILE_SIZE
 
@@ -52,10 +52,17 @@ typedef struct s_line
 	double y_end;
 } t_line;
 
+typedef struct s_vector
+{
+	double dir;//radian(not n°)
+	double len;
+} t_vector;
+
+
 void my_make_line(t_img *img, t_line *line, int color);
 void my_walls(t_img *img, int color);
-void my_vision(t_game *game,int x,int y, int color);
-void my_rec_put(t_game *game, int x,int y,int color);
+void my_vision(t_img *img,int x,int y, int color);
+void my_rec_put(t_img *img, int x,int y,int color);
 void my_ceiling(t_img *img);
 void make_pixel_line(t_game *game, t_line *line, int color);
 
